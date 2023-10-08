@@ -1,0 +1,50 @@
+[
+  {
+    "description": "Simple table",
+    "id": "1",
+    "price": 5000,
+    "title": "Table Simple"
+  },
+  {
+    "description": "Usual lamp",
+    "id": "2",
+    "price": 1000,
+    "title": "Lamp"
+  },
+  {
+    "description": "Gaming chair",
+    "id": "3",
+    "price": 12000,
+    "title": "Chair 20x"
+  },
+  {
+    "description": "Home furniture",
+    "id": "4",
+    "price": 3000,
+    "title": "Furniture"
+  },
+  {
+    "description": "Table pro",
+    "id": "5",
+    "price": 7000,
+    "title": "Table X1"
+  },
+  {
+    "description": "Extra cool chair",
+    "id": "6",
+    "price": 22000,
+    "title": "Chair 500 pro X"
+  },
+  {
+    "description": "The coolest table ever",
+    "id": "7",
+    "price": 75000,
+    "title": "Table Pro Max"
+  },
+  {
+    "description": "Something you would like to buy",
+    "id": "8",
+    "price": 9000,
+    "title": "Something"
+  }
+]
