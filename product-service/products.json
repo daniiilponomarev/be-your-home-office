@@ -3,48 +3,64 @@
     "description": "Simple table",
     "id": "1",
     "price": 5000,
-    "title": "Table Simple"
+    "title": "Table Simple",
+    "imageUrl": "https://source.unsplash.com/featured?home-office-furniture&sig=1",
+    "count": 5
   },
   {
     "description": "Usual lamp",
     "id": "2",
     "price": 1000,
-    "title": "Lamp"
+    "title": "Lamp",
+    "imageUrl": "https://source.unsplash.com/featured?home-office-furniture&sig=2",
+    "count": 1
   },
   {
     "description": "Gaming chair",
     "id": "3",
     "price": 12000,
-    "title": "Chair 20x"
+    "title": "Chair 20x",
+    "imageUrl": "https://source.unsplash.com/featured?home-office-furniture&sig=3",
+    "count": 1
   },
   {
     "description": "Home furniture",
     "id": "4",
     "price": 3000,
-    "title": "Furniture"
+    "title": "Furniture",
+    "imageUrl": "https://source.unsplash.com/featured?home-office-furniture&sig=4",
+    "count": 3
   },
   {
     "description": "Table pro",
     "id": "5",
     "price": 7000,
-    "title": "Table X1"
+    "title": "Table X1",
+    "imageUrl": "https://source.unsplash.com/featured?home-office-furniture&sig=5",
+    "count": 7
   },
   {
     "description": "Extra cool chair",
     "id": "6",
     "price": 22000,
-    "title": "Chair 500 pro X"
+    "title": "Chair 500 pro X",
+    "imageUrl": "https://source.unsplash.com/featured?home-office-furniture&sig=6",
+    "count": 2
   },
   {
     "description": "The coolest table ever",
     "id": "7",
     "price": 75000,
-    "title": "Table Pro Max"
+    "title": "Table Pro Max",
+    "imageUrl": "https://source.unsplash.com/featured?home-office-furniture&sig=7",
+    "count": 7
   },
   {
     "description": "Something you would like to buy",
     "id": "8",
     "price": 9000,
-    "title": "Something"
+    "title": "Something...",
+    "imageUrl": "https://source.unsplash.com/featured?home-office-furniture&sig=8",
+    "count": 9
   }
 ]

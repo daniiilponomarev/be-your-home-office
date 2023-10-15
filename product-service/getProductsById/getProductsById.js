@@ -1,9 +1,11 @@
 'use strict';
-import products from '../products.json';
-import time from '../common/time';
+import time from '../common/time.js';
+import { docClientAWS, productsTableName, stocksTableName } from '../utils/docClientAWS.js';
 
 export const handler = async event => {
   console.log('getProductById | event: ', event);
+  console.log(event.pathParameters);
+  console.log(event.pathParameters?.id);
   let { id: productId } = event.pathParameters || {};
   const timestamp = time.getTimestamp();
   const response = {
@@ -32,11 +34,21 @@ export const handler = async event => {
     };
   }
 
-  const product = products.find(p => p.id === productId);
-  console.log('getProductById | product: ', product);
+  const productData = await docClientAWS
+    .get({
+      TableName: productsTableName,
+      Key: { id: productId },
+    })
+    .promise();
+  const stockData = await docClientAWS
+    .get({
+      TableName: stocksTableName,
+      Key: { product_id: productId },
+    })
+    .promise();
 
-  if (!product) {
-    console.log('getProductById | Product ID not found on getProductsById | products: ', products);
+  if (!productData.Item) {
+    console.log('getProductById | Product ID not found on getProductsById');
     return {
       ...response,
       statusCode: 404,
@@ -47,11 +59,17 @@ export const handler = async event => {
     };
   }
 
-  product.imageUrl = `https://source.unsplash.com/featured?home-office-furniture&sig=${productId}`;
+  const productWithStock = {
+    ...productData.Item,
+    imageUrl:
+      productData.Item.imageUrl ||
+      `https://source.unsplash.com/featured?home-office-furniture&sig=${productData.Item.id}`,
+    count: stockData.Item ? stockData.Item.count : 0,
+  };
 
   return {
     ...response,
     statusCode: 200,
-    body: JSON.stringify({ product, timestamp }),
+    body: JSON.stringify({ productWithStock, timestamp }),
   };
 };

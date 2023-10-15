@@ -1,12 +1,26 @@
 'use strict';
-import productList from '../products.json';
-import time from '../common/time';
+import time from '../common/time.js';
+import { docClientAWS, productsTableName, stocksTableName } from '../utils/docClientAWS.js';
 
 export const handler = async event => {
   console.log('getProductList | event: ', event);
-  const products = productList.map(p => ({
+
+  const productsData = await docClientAWS.scan({ TableName: productsTableName }).promise();
+  const stocksData = await docClientAWS.scan({ TableName: stocksTableName }).promise();
+
+  const productsWithStocks = productsData.Items.map(product => {
+    const stock = stocksData.Items.find(s => s.product_id === product.id);
+    return {
+      ...product,
+      count: stock ? stock.count : 0,
+    };
+  });
+
+  console.log('getProductList | products: ', productsWithStocks);
+
+  const products = productsWithStocks.map(p => ({
     ...p,
-    imageUrl: `https://source.unsplash.com/featured?home-office-furniture&sig=${p.id}`,
+    imageUrl: p.imageUrl || `https://source.unsplash.com/featured?home-office-furniture&sig=${p.id}`,
   }));
   const timestamp = time.getTimestamp();
   console.log('getProductList | timestamp: ', timestamp, '\nproducts', products);

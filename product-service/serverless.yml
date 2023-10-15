@@ -12,6 +12,8 @@ provider:
   runtime: nodejs18.x
   stage: dev
   region: eu-west-1
+  httpApi:
+    cors: true
 
 # you can add statements to the Lambda function's IAM Role here
 #  iam:
@@ -43,14 +45,6 @@ provider:
 #    - include-me.js
 #    - include-me-dir/**
 
-plugins:
-  - serverless-webpack
-
-custom:
-  webpack:
-    webpackConfig: "webpack.config.js" # Name of webpack configuration file
-    includeModules: true # Node modules configuration for packaging
-
 functions:
   getProductsList:
     handler: getProductsList/index.handler
@@ -59,6 +53,9 @@ functions:
           path: /products
           method: get
           cors: true
+    environment:
+      ProductsTableName: 'products'
+      StockTableName: 'stocks'
   getProductsById:
     handler: getProductsById/index.handler
     events:
@@ -66,7 +63,18 @@ functions:
           path: /products/{id}
           method: get
           cors: true
+    environment:
+      ProductsTableName: 'products'
 
+  createProduct:
+    handler: createProduct/index.handler
+    events:
+      - httpApi:
+          method: POST
+          path: /products
+          cors: true
+    environment:
+      ProductsTableName: 'products'
 #      - websocket: $connect
 #      - s3: ${env:BUCKET}
 #      - schedule: rate(10 minutes)
