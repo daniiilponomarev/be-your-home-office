@@ -1,0 +1,36 @@
+{
+  "name": "product-service",
+  "version": "1.0.0",
+  "description": "",
+  "main": "",
+  "scripts": {
+    "build": "sls package",
+    "deploy": "sls deploy",
+    "invoke-local": "serverless invoke local --function getProductsList",
+    "serverless:remove": "sls remove",
+    "test": "jest"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+  },
+  "devDependencies": {
+    "@babel/plugin-transform-runtime": "^7.15.0",
+    "@babel/preset-env": "^7.15.0",
+    "@types/jest": "^27.0.1",
+    "@types/node": "^16.7.5",
+    "babel": "^6.23.0",
+    "babel-jest": "^27.1.0",
+    "babel-loader": "^8.2.2",
+    "babel-runtime": "^6.26.0",
+    "jest": "^27.1.0",
+    "serverless": "^3.20.0",
+    "serverless-webpack": "^5.5.2"
+  },
+  "jest": {
+    "transform": {
+      "^.+\\.jsx?$": "babel-jest"
+    }
+  }
+}
