@@ -1,1 +1,1 @@
-export { handler } from './getProductsById';
+export { handler } from './getProductsById.js';
