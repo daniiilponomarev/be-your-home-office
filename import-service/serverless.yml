@@ -50,3 +50,5 @@ functions:
             - prefix: uploaded/
     environment:
       S3_BUCKET: 'your-home-office-files1'
+      BUCKET_SOURCE: 'uploaded'
+      BUCKET_DIST: 'parsed'
