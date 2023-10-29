@@ -10,3 +10,4 @@ AWS.config.update({
 export const docClientAWS = new AWS.DynamoDB.DocumentClient();
 export const productsTableName = process.env.PRODUCTS_TABLE;
 export const stocksTableName = process.env.STOCKS_TABLE;
+export const snsTopicArn = process.env.SNS_TOPIC_ARN;

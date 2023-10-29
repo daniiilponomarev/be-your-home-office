@@ -14,6 +14,27 @@ provider:
   region: eu-west-1
   httpApi:
     cors: true
+  environment:
+    SNS_TOPIC_ARN:
+      Ref: CreateProductTopic
+    SQS_QUEUE_URL:
+      Fn::ImportValue: ProductService-QueueUrl
+
+iamRoleStatements:
+  - Effect: "Allow"
+    Action:
+      - 's3:*'
+    Resource: 'arn:aws:s3:::your-home-office-files1/*'
+  - Effect: "Allow"
+    Action:
+      - "sqs:*"
+    Resource:
+      'Fn::ImportValue': ProductService-QueueArn
+  - Effect: "Allow"
+    Action:
+      - "sns:*"
+    Resource:
+      Ref: CreateProductTopic
 
 # you can add statements to the Lambda function's IAM Role here
 #  iam:
@@ -32,11 +53,11 @@ provider:
 #              - - "arn:aws:s3:::"
 #                - "Ref" : "ServerlessDeploymentBucket"
 #                - "/*"
-
+#
 # you can define service wide environment variables here
 #  environment:
 #    variable1: value1
-
+#
 # you can add packaging information here
 #package:
 #  patterns:
@@ -75,6 +96,20 @@ functions:
           cors: true
     environment:
       ProductsTableName: 'products'
+
+  catalogBatchProcess:
+    handler: catalogBatchProcess/index.handler
+    events:
+      - sqs:
+          arn:
+            Fn::GetAtt:
+              - CatalogItemsQueue
+              - Arn
+          batchSize: 5
+    environment:
+      PRODUCTS_TABLE: 'products'
+      STOCKS_TABLE: 'stocks'
+
 #      - websocket: $connect
 #      - s3: ${env:BUCKET}
 #      - schedule: rate(10 minutes)
@@ -103,19 +138,42 @@ functions:
 #          conditions:
 #            host: example.com
 #            path: /hello
-
+#
 #    Define function environment variables here
 #    environment:
 #      variable2: value2
 
-# you can add CloudFormation resource templates here
-#resources:
-#  Resources:
-#    NewResource:
-#      Type: AWS::S3::Bucket
-#      Properties:
-#        BucketName: my-new-bucket
-#  Outputs:
-#     NewOutput:
-#       Description: "Description for the output"
-#       Value: "Some output value"
+resources:
+  Resources:
+    CatalogItemsQueue:
+      Type: 'AWS::SQS::Queue'
+      Properties:
+        QueueName: catalogItemsQueue
+
+    CreateProductTopic:
+      Type: 'AWS::SNS::Topic'
+      Properties:
+        TopicName: createProductTopic
+
+    EmailSubscription:
+      Type: 'AWS::SNS::Subscription'
+      Properties:
+        Endpoint: daniiil.ponomarev@gmail.com
+        Protocol: email
+        TopicArn:
+          Ref: CreateProductTopic
+  Outputs:
+    QueueUrlExport:
+      Description: "Catalog Items Queue URL"
+      Value:
+        Ref: CatalogItemsQueue
+      Export:
+        Name: "ProductService-QueueUrl"
+    QueueArnExport:
+      Description: "Catalog Items Queue ARN"
+      Value:
+        Fn::GetAtt:
+          - CatalogItemsQueue
+          - Arn
+      Export:
+        Name: "ProductService-QueueArn"
