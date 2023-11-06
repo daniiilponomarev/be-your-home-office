@@ -1,11 +1,13 @@
 import AWS from 'aws-sdk';
 import csvParser from 'csv-parser';
 import { config } from 'dotenv';
+import { sqsQueueUrl } from '../utils/docClientAWS.js';
 
 config();
 
 const { S3_BUCKET, BUCKET_SOURCE, BUCKET_DIST } = process.env;
 const s3 = new AWS.S3({ signatureVersion: 'v4' });
+const sqs = new AWS.SQS();
 
 export const handler = async event => {
   console.log('importFileParser | event: ', event);
@@ -27,8 +29,19 @@ export const handler = async event => {
       await new Promise((resolve, reject) => {
         s3Stream
           .pipe(csvParser())
-          .on('data', data => {
+          .on('data', async data => {
             console.log('importFileParser | CSV Record:', data);
+
+            try {
+              await sqs
+                .sendMessage({
+                  QueueUrl: sqsQueueUrl,
+                  MessageBody: JSON.stringify(data),
+                })
+                .promise();
+            } catch (e) {
+              console.log('importFileParser | error while sending a message:', e);
+            }
           })
           .on('end', async () => {
             console.log(`importFileParser | S3 object: ${s3ObjectKey} processed`);

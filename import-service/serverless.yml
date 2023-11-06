@@ -7,6 +7,9 @@ provider:
   runtime: nodejs18.x
   stage: dev
   region: eu-west-1
+  environment:
+    SQS_QUEUE_URL:
+      Fn::ImportValue: ProductService-QueueUrl
 
 iamRoleStatements:
   - Effect: 'Allow'
@@ -19,6 +22,11 @@ iamRoleStatements:
       - 's3:GetObject'
       - 's3:PutObject'
     Resource: 'arn:aws:s3:::your-home-office-files1/*'
+  - Effect: Allow
+    Action:
+      - "sqs:*"
+    Resource:
+      'Fn::ImportValue': ProductService-QueueUrl
 
 custom:
   bundle:
