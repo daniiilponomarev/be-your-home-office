@@ -2,11 +2,19 @@ service: import-service
 
 frameworkVersion: "3"
 
+useDotenv: true
+
 provider:
   name: aws
   runtime: nodejs18.x
-  stage: dev
   region: eu-west-1
+  stage: dev
+  httpApi:
+    cors: true
+    authorizers:
+      basicAuthorizer:
+        type: request
+        functionArn: ${env:BASIC_AUTHORIZER_ARN}
   environment:
     SQS_QUEUE_URL:
       Fn::ImportValue: ProductService-QueueUrl
@@ -40,6 +48,8 @@ functions:
           path: /import
           method: get
           cors: true
+          authorizer:
+            name: basicAuthorizer
           request:
             parameters:
               querystrings:

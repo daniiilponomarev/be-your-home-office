@@ -1,0 +1,33 @@
+service: authorization-service
+
+frameworkVersion: "3"
+
+useDotenv: true
+
+provider:
+  name: aws
+  runtime: nodejs18.x
+  region: eu-west-1
+  stage: dev
+  httpApi:
+    cors: true
+    authorizers:
+      tokenAuthorizer:
+        type: request
+        functionName: basicAuthorizer
+  environment:
+    REGION: ${self:provider.region}
+    GITHUB_USERNAME: ${env:GITHUB_USERNAME}
+    TEST_PASSWORD: ${env:TEST_PASSWORD}
+
+functions:
+  basicAuthorizer:
+    handler: basicAuthorizer/index.handler
+    events:
+      - httpApi:
+          path: /token
+          method: GET
+          authorizer:
+            name: tokenAuthorizer
+    environment:
+      USER_CREDENTIAL: ${env:GITHUB_USERNAME}:${env:TEST_PASSWORD}
